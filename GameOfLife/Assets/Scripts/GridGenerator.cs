@@ -21,8 +21,8 @@ public class GridGenerator : MonoBehaviour
             for (int j = 0; j < tab.GetLength(1); j++)
             {
                 randomSelector = Random.Range(0, 3);
-                tab[i,j] = new Entity();
-                tab[i, j].entityType = randomSelector;
+                tab[i,j] = new Entity(randomSelector);
+                
                       
                    
                 
