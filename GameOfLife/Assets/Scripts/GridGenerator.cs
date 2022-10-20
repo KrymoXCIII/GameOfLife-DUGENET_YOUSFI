@@ -7,7 +7,8 @@ public class GridGenerator : MonoBehaviour
     private Entity[,] tab = new Entity[20,20];
 
     private Entity[,] tempTab = new Entity[20, 20];
-    
+
+    private int randomSelector; 
     
     // Start is called before the first frame update
     void Start()
@@ -16,7 +17,23 @@ public class GridGenerator : MonoBehaviour
         {
             for (int j = 0; j < tab.GetLength(1); j++)
             {
-               // tab[i][j] =  
+                randomSelector = Random.Range(0, 4);
+
+                switch (randomSelector)
+                {
+                    case 0 :
+                        tab[i,j] = null;
+                        break;
+                    case 1 :
+                        tab[i, j] = new Wolf();
+                        break;
+                    case 2 :
+                        tab[i, j] = new Sheep();
+                        break;
+                    case 3 :
+                        tab[i, j] = new Grass();
+                        break;
+                } 
             }
         }
         
@@ -35,19 +52,26 @@ class Entity
     
 }
 
-class Wolf
+class Animal : Entity
+{
+    private int timeBeforeStarving = 5;
+    private int lifeDuration = 20;
+    private bool isFed;
+
+}
+class Wolf : Animal
 {
     
 }
 
-class Sheep
+class Sheep : Animal
 {
     
 }
 
-class Grass
+class Grass : Entity
 {
-    private bool isAlive;
+    
     private int timeBeforeRespawn = Random.Range(1,5);
     
     
