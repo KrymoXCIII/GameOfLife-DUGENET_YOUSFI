@@ -44,13 +44,15 @@ public class GridGenerator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            currentFrame++;
+            
             //Suppression précédent
             foreach (GameObject o in GameObject.FindGameObjectsWithTag("GRID"))
             {
                 Destroy(o);
             }
 
-            currentFrame++;
+            
             // Parcours du tableau
             for (int i = 0; i < tab.GetLength(0); i++)
             {
@@ -95,10 +97,9 @@ public class GridGenerator : MonoBehaviour
                                                                     y2 + y + j < tab.GetLength(1) && y2 + y + j > 0)
                                                                 {
 
-                                                                    if (tab[x2 + x + i, y2 + y + j].entityType == 2 &&
-                                                                        tab[x2 + x + i, y2 + y + j].isAlive == true)
+                                                                    if (tab[x2 + x + i, y2 + y + j].entityType != 2 || tab[x2 + x + i, y2 + y + j].isAlive != true)
                                                                     {
-                                                                        break;
+                                                                        continue;
 
 
                                                                     }
