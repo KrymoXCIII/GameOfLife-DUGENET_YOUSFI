@@ -28,10 +28,6 @@ public class GridGenerator : MonoBehaviour
             {
                 randomSelector = Random.Range(0, 3);
                 tab[i, j] = new Entity(randomSelector);
-
-
-
-
             }
         }
 
@@ -58,6 +54,7 @@ public class GridGenerator : MonoBehaviour
             {
                 for (int j = 0; j < tab.GetLength(1); j++)
                 {
+                    tempTab[i, j] = tab[i, j];
                     // Type d'entité
                     switch (tab[i, j].entityType)
                     {
@@ -122,7 +119,6 @@ public class GridGenerator : MonoBehaviour
                                 {
                                     tempTab[i, j] = new Entity(2);
                                     break;
-
                                 }
 
                                 if (entityListWolf.Count >= 2)
@@ -139,7 +135,7 @@ public class GridGenerator : MonoBehaviour
                                 tempTab[i, j] = new Entity(tab[i, j]);
                                 tempTab[i, j].timeBeforeRespawn--;
 
-                                if (tempTab[i, j].timeBeforeRespawn == 0)
+                                if (tab[i, j].timeBeforeRespawn == 0)
                                 {
                                     tempTab[i, j].isAlive = true;
                                     tempTab[i, j].timeBeforeRespawn = 5;
@@ -190,12 +186,80 @@ public class GridGenerator : MonoBehaviour
 
                             if (tab[i, j].isAlive)
                             {
+                                List<Entity> entityListS = new List<Entity>();
                                 List<Entity> entityListW = new List<Entity>();
+
                                 if (tab[i, j].timeBeforeStarving <= 0 || tab[i, j].lifeDuration <= 0)
                                 {
                                     tab[i, j].isAlive = false;
+                                    break;
+                                }
+
+                                tab[i, j].timeBeforeStarving--;
+                                tab[i, j].lifeDuration--;
+
+                                for (int x = -1; x < 2; x++)
+                                {
+                                    for (int y = -1; y < 2; y++)
+                                    {
+                                        if (x != 0 || y != 0)
+                                        {
+                                            if (x + i < tab.GetLength(0) && x + i > 0 && y + j < tab.GetLength(1) &&
+                                                y + j > 0)
+                                            {
+                                                if (tab[x + i, y + j].entityType == 1 &&
+                                                    tab[x + i, y + j].isAlive == true)
+                                                {
+                                                    entityListW.Add(tab[x + i, y + j]);
+                                                }
+                                                
+                                                if (tab[x + i, y + j].entityType == 2 &&
+                                                    tab[x + i, y + j].isAlive == true)
+                                                {
+                                                    entityListS.Add(tab[x + i, y + j]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (entityListW.Count > 3)
+                                {
+                                    tempTab[i, j] = new Entity(0);
+                                }
+                                
+                                if (entityListS.Count != 0)
+                                {
+                                    Entity eated = entityListS[Random.Range(0, entityListS.Count)];
+
+                                    eated.isAlive = false;
+
+                                    tab[i, j].timeBeforeStarving = 5;
 
                                 }
+
+                            }
+                            else
+                            {
+                                tempTab[i, j] = new Entity(0);
+                            }
+
+                            break;
+
+
+                        case 2: // SHEEP
+                            if (tab[i, j].isAlive)
+                            {
+                                if (tab[i, j].lifeDuration <= 0 || tab[i, j].timeBeforeStarving <= 0)
+                                {
+                                    tab[i, j].isAlive = false;
+                                }
+                                else
+                                {
+                                    tab[i, j].timeBeforeStarving--;
+                                    tab[i, j].lifeDuration--;
+                                }
+                                List<Entity> entityListS = new List<Entity>();
 
                                 for (int x = -1; x < 2; x++)
                                 {
@@ -209,46 +273,21 @@ public class GridGenerator : MonoBehaviour
                                                 if (tab[x + i, y + j].entityType == 2 &&
                                                     tab[x + i, y + j].isAlive == true)
                                                 {
-                                                    entityListW.Add(tab[x + i, y + j]);
-
+                                                    entityListS.Add(tab[x + i, y + j]);
                                                 }
                                             }
                                         }
                                     }
                                 }
 
-                                if (entityListW.Count != 0)
+                                if (entityListS.Count > 3)
                                 {
-                                    Entity eated = entityListW[Random.Range(0, entityListW.Count)];
-
-                                    eated.isAlive = false;
-
-                                    tab[i, j].timeBeforeStarving = 5;
-
+                                    tempTab[i, j] = new Entity(0);
                                 }
-
                             }
                             else
                             {
-                                tab[i, j] = new Entity(0);
-                            }
-
-                            break;
-
-
-                        case 2: // SHEEP
-                            if (tab[i, j].isAlive)
-                            {
-                                if (tab[i, j].lifeDuration <= 0 || tab[i, j].timeBeforeStarving <= 0)
-                                {
-                                    tab[i, j].isAlive = false;
-
-                                }
-
-                            }
-                            else
-                            {
-                                tab[i, j] = new Entity(0);
+                                tempTab[i, j] = new Entity(0);
                             }
 
                             break;
@@ -256,10 +295,14 @@ public class GridGenerator : MonoBehaviour
 
                 }
             }
-            // tempTab = tab;
 
-
-
+            for (int i = 0; i < tab.GetLength(0); i++)
+            {
+                for (int j = 0; j < tab.GetLength(1); j++)
+                {
+                    tab[i, j] = tempTab[i, j];
+                }
+            }
 
             // AFFICHAGE DU JEU 
 
@@ -316,9 +359,7 @@ class Entity
         entityType = entity.entityType; // 0 : Grass ; 1 : Wolf ; 2 : Sheep
         timeBeforeStarving = entity.timeBeforeStarving;
         lifeDuration = entity.lifeDuration;
-       
         timeBeforeRespawn = entity.timeBeforeRespawn;
-    
     }
     public bool isAlive;
     public int entityType; // 0 : Grass ; 1 : Wolf ; 2 : Sheep
