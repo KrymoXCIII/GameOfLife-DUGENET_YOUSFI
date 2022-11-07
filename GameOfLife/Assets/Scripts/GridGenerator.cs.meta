@@ -3,7 +3,10 @@ guid: 9e468a6876d344f4ba8a1a6938bde3d7
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - GRASS: {fileID: 2066947291651591853, guid: a97f658fae19d41ec9e7facde1aa36fe, type: 3}
+  - SHEEP: {fileID: 757093508395614295, guid: 5f590037f8abf4fe79d79e83be7c4b81, type: 3}
+  - WOLF: {fileID: 7150149287271409435, guid: 2f3c0f5274e9d45d2ada0f22e85ec422, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
